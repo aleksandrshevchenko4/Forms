@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +22,8 @@ namespace Forms
         PictureBox picture;
         TabControl tabControl;
         TabPage page1, page2, page3;
+        ListBox lbox;
+        DataGridView dgv;
         public Form1()
         {
             this.Height = 500;
@@ -51,9 +53,12 @@ namespace Forms
             tn.Nodes.Add(new TreeNode("Radionupp-Radiobutton"));
             tn.Nodes.Add(new TreeNode("Teksttask-Textbox"));
             tn.Nodes.Add(new TreeNode("Piltikast-Picturebox"));
-            tn.Nodes.Add(new TreeNode("Picturebox"));
+            //tn.Nodes.Add(new TreeNode("Picturebox"));
             tn.Nodes.Add(new TreeNode("Kaart-TabControl"));
             tn.Nodes.Add(new TreeNode("MessageBox"));
+            tn.Nodes.Add(new TreeNode("ListBox"));
+            tn.Nodes.Add(new TreeNode("DataGridView"));
+            tn.Nodes.Add(new TreeNode("Menu"));
             tree.Nodes.Add(tn);
             this.Controls.Add(tree);
         }
@@ -109,6 +114,7 @@ namespace Forms
             {
                 picture = new PictureBox();
                 picture.Image = new Bitmap("img.jpg");
+                picture.Location = new Point(400, 400);
                 picture.Size = new Size(90, 90);
                 picture.SizeMode = PictureBoxSizeMode.StretchImage;
                 picture.BorderStyle = BorderStyle.Fixed3D;
@@ -122,6 +128,9 @@ namespace Forms
                 page1 = new TabPage("Esimene");
                 page2 = new TabPage("Teine");
                 page3 = new TabPage("Kolmas");
+                page1.BackColor = Color.Blue;
+                page2.BackColor = Color.Red;
+                page3.BackColor = Color.Yellow;
                 tabControl.Controls.Add(page1);
                 tabControl.Controls.Add(page2);
                 tabControl.Controls.Add(page3);
@@ -141,6 +150,48 @@ namespace Forms
                         Controls.Add(lbl);
                     }
                 }
+            }
+            else if (e.Node.Text == "ListBox")
+            {
+                string[] Colors_nimetused = new string[] {"Sinine", "Kollane", "Roheline", "Punane"};
+                lbox = new ListBox();
+                foreach(var item in Colors_nimetused)
+                {
+                    lbox.Items.Add(item);
+                }
+                lbox.Location = new Point(350, 50);
+                lbox.Width=50;
+                lbox.Height=Colors_nimetused.Length*15;
+                this.Controls.Add(lbox);
+            }
+            else if (e.Node.Text == "DataGridView")
+            {
+                DataSet dataSet = new DataSet("Näide");
+                dataSet.ReadXml!("..//..//Files//example.xml");
+                DataGridView dgv = new DataGridView();
+                dgv.Location = new Point(200, 200);
+                dgv.Width = 250;
+                dgv.Height = 250;
+                dgv.AutoGenerateColumns = true;
+                dgv.DataMember = "food";
+                dgv.DataSource = dataSet;
+                Controls.Add(dgv);
+            }
+            else if (e.Node.Text == "Menu")
+            {
+                MainMenu menu = new MainMenu();
+                MenuItem menuItem1 = new MenuItem("File");
+                menuItem1.MenuItems.Add("Exit", new EventHandler(menuitem1_Exit));
+                menu.MenuItems.Add(menuItem1);
+                this.Menu = menu;
+            }
+        }
+
+        private void menuitem1_Exit(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Kas oled kindel?","Küsimus", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                this.Dispose()
             }
         }
 
@@ -196,7 +247,6 @@ namespace Forms
                 lbl.BackColor = Color.White;
                 lbl.ForeColor = Color.Green;
             }
-
         }
     }
 }
